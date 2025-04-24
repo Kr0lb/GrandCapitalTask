@@ -1,15 +1,16 @@
 package by.grc.GrandCapitalTask.dtos;
 
+import by.grc.GrandCapitalTask.models.Email;
 import lombok.Value;
 
 import java.io.Serializable;
 
 /**
- * DTO for {@link by.grc.GrandCapitalTask.models.PhoneData}
+ * DTO for {@link Email}
  */
 @Value
-public class PhoneDataDto implements Serializable {
+public class EmailDto implements Serializable {
     Long ID;
     UserDto user;
-    String phone;
+    String email;
 }

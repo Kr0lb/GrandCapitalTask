@@ -9,10 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "emails")
+@Table(name = "phone_data")
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailData {
+public class Phone {
 
     @Id
     @Column(unique = true, nullable = false)
@@ -23,6 +23,6 @@ public class EmailData {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(unique = true, nullable = false, length = 200)
-    private String email;
+    @Column(unique = true, nullable = false,length = 13)
+    private String phone;
 }
