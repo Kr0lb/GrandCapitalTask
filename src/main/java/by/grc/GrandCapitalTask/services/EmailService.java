@@ -6,7 +6,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService extends BaseService<Email, EmailRepository> {
+
     public EmailService(EmailRepository repo) {
         super(repo);
+    }
+
+    public void delete(Long Id) {
+        this.repo.deleteById(Id);
+    }
+
+    public Email save(Email email) {
+        return this.repo.save(email);
+    }
+
+    public Email update(Email email) {
+        return this.repo.save(email);
     }
 }
