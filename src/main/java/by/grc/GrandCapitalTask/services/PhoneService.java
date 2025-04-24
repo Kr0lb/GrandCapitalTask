@@ -15,8 +15,8 @@ public class PhoneService extends BaseService<Phone, PhoneRepository> {
         this.repo.deleteById(Id);
     }
 
-    public Phone save(Phone phone) {
-        return this.repo.save(phone);
+    public void save(Phone phone) {
+        this.repo.save(phone);
     }
 
     public Phone update(Phone phone) {

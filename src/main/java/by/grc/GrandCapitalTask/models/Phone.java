@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.ReadOnlyProperty;
 
 @Getter
 @Setter
@@ -17,6 +18,7 @@ public class Phone {
     @Id
     @Column(unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ReadOnlyProperty
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
