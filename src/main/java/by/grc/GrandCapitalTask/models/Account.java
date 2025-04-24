@@ -24,5 +24,7 @@ public class Account {
     private User user;
 
     private Double balance;
+
+    private Double deposit;
 }
 
