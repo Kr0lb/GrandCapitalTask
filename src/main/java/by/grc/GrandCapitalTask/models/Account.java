@@ -15,16 +15,14 @@ import lombok.Setter;
 public class Account {
 
     @Id
-    @Column(unique = true, nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     private Double balance;
-
-    private Double deposit;
 }
 

@@ -10,19 +10,20 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
     @Id
-    @Column(unique = true, nullable = false)
+    @Column(name = "id", unique = true, nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ID;
+    private Long id;
 
     @Column(length = 500)
     private String name;
@@ -33,4 +34,10 @@ public class User {
     @Column(length = 500)
     @Length(min = 8, max = 500)
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private List<Phone> phones;
+
+    @OneToMany(mappedBy = "user")
+    private List<Email> emails;
 }

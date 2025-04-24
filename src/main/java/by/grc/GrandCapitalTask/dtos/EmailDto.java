@@ -1,6 +1,8 @@
 package by.grc.GrandCapitalTask.dtos;
 
 import by.grc.GrandCapitalTask.models.Email;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import java.io.Serializable;
