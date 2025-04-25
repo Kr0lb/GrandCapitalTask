@@ -36,7 +36,8 @@ public class AccountService extends BaseService<Account, AccountRepository> {
     }
 
     @Transactional
-    public synchronized void transfer(Long userId, Long clientId, Double price) {
+    public synchronized void transfer(Long clientId, Double price) {
+        Long userId = JwtService.getUser().getId();
         Account account = this.repo.findByUser_Id(userId);
         account.setBalance(this.round(account.getBalance() - price));
         this.repo.save(account);

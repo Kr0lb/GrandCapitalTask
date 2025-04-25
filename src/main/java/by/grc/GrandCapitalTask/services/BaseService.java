@@ -13,10 +13,6 @@ public abstract class BaseService<E, R extends JpaRepository<E, Long>> {
 
     protected final R repo;
 
-    protected void save(E entity) {
-        repo.save(entity);
-    }
-
     protected List<E> getAll() {
         return this.repo.findAll();
     }

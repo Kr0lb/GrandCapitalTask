@@ -11,12 +11,12 @@ public class PhoneService extends BaseService<Phone, PhoneRepository> {
         super(repo);
     }
 
-    public void delete(Long Id) {
-        this.repo.deleteById(Id);
+    public void delete(Phone phone) {
+        this.repo.deleteById(phone.getId());
     }
 
-    public void save(Phone phone) {
-        this.repo.save(phone);
+    public Phone save(Phone phone) {
+        return this.repo.save(phone);
     }
 
     public Phone update(Phone phone) {
