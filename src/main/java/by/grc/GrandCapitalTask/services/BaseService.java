@@ -11,21 +11,21 @@ public abstract class BaseService<E, R extends JpaRepository<E, Long>> {
 
     protected final R repo;
 
-    public void save(E entity) {
+    protected void save(E entity) {
         repo.save(entity);
     }
 
-    public List<E> getAll() {
+    protected List<E> getAll() {
         return this.repo.findAll();
     }
 
-    public Optional<E> getById(Long id) {
+    protected Optional<E> getById(Long id) {
         if (id == null)
             return Optional.empty();
         return this.repo.findById(id);
     }
 
-    public void deleteById(Long id) {
+    protected void deleteById(Long id) {
         this.repo.deleteById(id);
     }
 }
