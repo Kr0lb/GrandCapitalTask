@@ -1,11 +1,13 @@
 package by.grc.GrandCapitalTask.services;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Getter
 @RequiredArgsConstructor
 public abstract class BaseService<E, R extends JpaRepository<E, Long>> {
 

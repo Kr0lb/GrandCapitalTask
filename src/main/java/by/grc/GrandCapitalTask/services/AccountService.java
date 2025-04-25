@@ -4,7 +4,7 @@ import by.grc.GrandCapitalTask.models.Account;
 import by.grc.GrandCapitalTask.models.Deposit;
 import by.grc.GrandCapitalTask.repositories.AccountRepository;
 import jakarta.transaction.Transactional;
-import lombok.Getter;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,7 +20,7 @@ public class AccountService extends BaseService<Account, AccountRepository> {
         this.depositService = depositService;
     }
 
-    //    @Scheduled(cron = "0/30 * * * * *")
+    @Scheduled(cron = "0/30 * * * * *")
     public void interestAccrual() {
         this.repo.findAll().forEach(account -> {
             Deposit deposit = this.depositService.repo.findByStatusIsTrueAndAccount_Id(account.getId());
@@ -37,12 +37,12 @@ public class AccountService extends BaseService<Account, AccountRepository> {
 
     @Transactional
     public synchronized void transfer(Long userId, Long clientId, Double price) {
-            Account account = this.repo.findByUser_Id(userId);
-            account.setBalance(this.round(account.getBalance() - price));
-            this.repo.save(account);
-            Account client = this.repo.findByUser_Id(clientId);
-            client.setBalance(this.round(client.getBalance() + price));
-            this.repo.save(client);
-            if (this.repo.existNegativeBalance(userId)) throw new RuntimeException("Balance not enough");
+        Account account = this.repo.findByUser_Id(userId);
+        account.setBalance(this.round(account.getBalance() - price));
+        this.repo.save(account);
+        Account client = this.repo.findByUser_Id(clientId);
+        client.setBalance(this.round(client.getBalance() + price));
+        this.repo.save(client);
+        if (this.repo.existNegativeBalance(userId)) throw new RuntimeException("Balance not enough");
     }
 }

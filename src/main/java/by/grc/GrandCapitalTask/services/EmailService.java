@@ -15,8 +15,10 @@ public class EmailService extends BaseService<Email, EmailRepository> {
         this.repo.deleteById(Id);
     }
 
-    public void save(Email email) {
-        this.repo.save(email);
+    public Email save(String email) {
+        Email entity = new Email();
+        entity.setEmail(email);
+        return this.repo.save(entity);
     }
 
     public Email update(Email email) {

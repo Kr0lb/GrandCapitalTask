@@ -1,6 +1,9 @@
 package by.grc.GrandCapitalTask.dtos;
 
 import by.grc.GrandCapitalTask.models.Phone;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import java.io.Serializable;
@@ -8,9 +11,11 @@ import java.io.Serializable;
 /**
  * DTO for {@link Phone}
  */
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PhoneDto implements Serializable {
-    Long ID;
-    UserDto user;
+    Long id;
+//    UserDto user;
     String phone;
 }
