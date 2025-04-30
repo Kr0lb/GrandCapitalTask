@@ -21,7 +21,7 @@ public class AccountController {
 
     @Operation(summary = "Перевод", description = "перевод денег от одного пользователя другому")
     @PutMapping("/transfer")
-    public void transferToUser(@AuthenticationPrincipal Jwt principal, @RequestParam Long clientId, @Pattern(regexp = "^\\d*.\\d\\d") @RequestParam Double price) {
-        this.accountService.transfer(principal.getClaim("USER_ID"), clientId, price);
+    public void transferToUser(@AuthenticationPrincipal Jwt principal, @RequestParam Long clientId, @Pattern(regexp = "^\\d*.\\d\\d$") @RequestParam String price) {
+        this.accountService.transfer(principal.getClaim("USER_ID"), clientId, Double.parseDouble(price));
     }
 }

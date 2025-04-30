@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,7 +37,6 @@ public class User implements UserDetails {
     private LocalDate dateOfBirth;
 
     @Column(length = 500)
-    @Length(min = 8, max = 500)
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
