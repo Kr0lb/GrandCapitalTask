@@ -5,12 +5,13 @@ import by.grc.GrandCapitalTask.mapper.MapperImpl;
 import by.grc.GrandCapitalTask.models.User;
 import by.grc.GrandCapitalTask.services.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,7 @@ public class UserController {
     @GetMapping("/search")
     public List<UserDto> searchUser(@RequestParam(required = false) String dateOfBirth
             , @RequestParam(required = false) String phone, @RequestParam(required = false) String name
-            , @RequestParam(required = false) String email, @RequestParam int page, @RequestParam int size) {
+            , @RequestParam(required = false) String email, @RequestParam int page, @RequestParam int size, @AuthenticationPrincipal Jwt principal) {
         return this.mapper.toDtos(this.userService.searchUser(dateOfBirth, phone, name, email, page, size), UserDto.class);
     }
 }

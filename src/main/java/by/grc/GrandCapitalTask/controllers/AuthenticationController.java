@@ -2,7 +2,7 @@ package by.grc.GrandCapitalTask.controllers;
 
 import by.grc.GrandCapitalTask.models.User;
 import by.grc.GrandCapitalTask.services.AuthenticationService;
-import by.grc.GrandCapitalTask.services.JwtService;
+import by.grc.GrandCapitalTask.configaration.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
