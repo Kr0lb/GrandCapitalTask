@@ -1,108 +1,81 @@
 package by.grc.GrandCapitalTask;
 
-import by.grc.GrandCapitalTask.dtos.EmailDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import by.grc.GrandCapitalTask.services.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Testcontainers
 @SpringBootTest
-@ExtendWith(SpringExtension.class)
 @AutoConfigureMockMvc
 public class GrandCapitalTestContainers {
 
     @Value("${security.jwt.secret-key}")
     private String secretKey;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
-    public static final PostgreSQLContainer<?> postgresContainer =
-            new PostgreSQLContainer<>("postgres:13.3")
-                    .withDatabaseName("testdb")
-                    .withUsername("user")
-                    .withPassword("password");
+    @Container
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest")
+            .withDatabaseName("grand_capital")
+            .withUsername("postgres")
+            .withPassword("root");
+
+    @DynamicPropertySource
+    static void configure(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
 
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
-    public void setUp() {
-        postgresContainer.start();
-    }
+    @Autowired
+    private UserService userService;
 
     @Test
-    public void testGetAccount() throws Exception {
-        String token = generateToken("jons@gmail.com");
-
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/user/search?page=0&size=10&name=Jons")
+    void testTransfer() throws Exception {
+        String token = mockMvc.perform(MockMvcRequestBuilders.post("/auth/login?username=jons@gmail.com&password=12345678")).andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
+        mockMvc.perform(MockMvcRequestBuilders.put("/account/transfer?clientId=2&price=30.10")
                         .header("Authorization", "Bearer " + token))
-                .andExpect(status().isOk())
-                .andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
-        // Проверка ответа
-        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        //todo: может возникнуть ошибка из-за депозитов
+        assertEquals(this.userService.getRepo().findById(1L).orElseThrow(Exception::new).getAccount().getBalance(), 70.00);
+        assertEquals(this.userService.getRepo().findById(2L).orElseThrow(Exception::new).getAccount().getBalance(), 351.63);
     }
 
     @Test
-    public void testAddEmail() throws Exception {
-        String token = generateToken("jons@gmail.com");
-
-        EmailDto emailDto = new EmailDto();
-        emailDto.setEmail("jons1@gmail.com");
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/email/add", emailDto)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(emailDto)).header("Authorization", "Bearer " + token))
-                .andExpect(status().isOk());
-    }
-
-//    @Test
-//    public void testCreateAccount() throws Exception {
-//        String accountJson = "{\"balance\":1000.0}";
-//
-//        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/api/accounts")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(accountJson))
-//                .andExpect(MockMvcResultMatchers.status().isCreated())
-//                .andReturn();
-//
-//        String response = result.getResponse().getContentAsString();
-//        assertEquals("{\"balance\":1000.0}", result.getResponse());
-//    }
-
-    @AfterEach
-    public void tearDown() {
-        postgresContainer.stop();
+    void testGetAccount() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/user/search?page=0&size=10&name=Jons")
+                        .header("Authorization", "Bearer " + generateToken("jons@gmail.com")))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     private String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(new SecretKeySpec(secretKey.getBytes(), "HmacSHA256"), SignatureAlgorithm.HS256)
                 .compact();
     }
 }
