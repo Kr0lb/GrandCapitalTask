@@ -3,6 +3,7 @@ package by.grc.GrandCapitalTask.services;
 import by.grc.GrandCapitalTask.models.User;
 import by.grc.GrandCapitalTask.repositories.UserRepository;
 import by.grc.GrandCapitalTask.repositories.UserSpecification;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class UserService extends BaseService<User, UserRepository> {
         super(repo);
     }
 
+    @Cacheable(cacheNames = "users")
     public List<User> searchUser(String dateOfBirth, String phone, String name, String email, int page, int size) {
         LocalDate date = dateOfBirth == null ? null : LocalDate.parse(dateOfBirth);
         Specification<User> spec = Specification.where(UserSpecification.dateOfBirthGreaterThan(date))
