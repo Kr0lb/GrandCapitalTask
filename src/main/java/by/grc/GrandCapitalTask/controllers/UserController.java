@@ -4,6 +4,8 @@ import by.grc.GrandCapitalTask.dtos.UserDto;
 import by.grc.GrandCapitalTask.mapper.MapperImpl;
 import by.grc.GrandCapitalTask.models.User;
 import by.grc.GrandCapitalTask.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -17,12 +19,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@Tag(name = "UserController", description = "контроллер для работы с пользователями")
 public class UserController {
 
     private final UserService userService;
     private final MapperImpl<User, UserDto> mapper;
 
     //Страницы начинаются с 0
+    @Operation(summary = "Поиск", description = "Поиск пользователя по параметрам, с учетом пагинации")
     @GetMapping("/search")
     public List<UserDto> searchUser(@RequestParam(required = false) String dateOfBirth
             , @RequestParam(required = false) String phone, @RequestParam(required = false) String name
