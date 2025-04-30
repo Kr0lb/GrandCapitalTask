@@ -1,7 +1,5 @@
 package by.grc.GrandCapitalTask.services;
 
-import by.grc.GrandCapitalTask.dtos.EmailDto;
-import by.grc.GrandCapitalTask.mapper.Mapper;
 import by.grc.GrandCapitalTask.models.Email;
 import by.grc.GrandCapitalTask.repositories.EmailRepository;
 import org.springframework.stereotype.Service;
@@ -9,11 +7,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService extends BaseService<Email, EmailRepository> {
 
-    private final Mapper<Email, EmailDto> mapper;
-
-    public EmailService(EmailRepository repo, Mapper<Email, EmailDto> mapper) {
+    public EmailService(EmailRepository repo) {
         super(repo);
-        this.mapper = mapper;
     }
 
     public void delete(Email email) {
