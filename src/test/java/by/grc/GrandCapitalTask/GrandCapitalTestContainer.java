@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Testcontainers
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GrandCapitalTestContainers {
+public class GrandCapitalTestContainer {
 
     @Value("${security.jwt.secret-key}")
     private String secretKey;
