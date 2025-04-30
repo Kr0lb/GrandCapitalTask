@@ -50,19 +50,4 @@ public class ApplicationConfiguration {
 
         return authProvider;
     }
-
-    @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory factory) {
-        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
-                .entryTtl(Duration.ofMinutes(10))  // TTL по умолчанию
-                .disableCachingNullValues();
-
-        Map<String, RedisCacheConfiguration> cacheConfigs = new HashMap<>();
-        cacheConfigs.put("users", config.entryTtl(Duration.ofMinutes(30)));
-
-        return RedisCacheManager.builder(factory)
-                .cacheDefaults(config)
-                .withInitialCacheConfigurations(cacheConfigs)
-                .build();
-    }
 }
