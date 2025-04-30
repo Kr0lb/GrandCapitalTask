@@ -1,10 +1,10 @@
-package by.grc.GrandCapitalTask.services;
+package by.grc.GrandCapitalTask.configaration;
 
 import by.grc.GrandCapitalTask.models.User;
+import by.grc.GrandCapitalTask.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import jakarta.xml.bind.DatatypeConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -41,7 +42,8 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("authorities", userDetails.getAuthorities());
+        User user = (User) userDetails;
+        extraClaims.put("USER_ID", user.getId());
         return generateToken(extraClaims, userDetails);
     }
 
@@ -91,8 +93,7 @@ public class JwtService {
     }
 
     private Key getSignInKey() {
-        byte[] keyBytes = DatatypeConverter.parseBase64Binary(secretKey);
-        return new SecretKeySpec(keyBytes, SignatureAlgorithm.HS256.getJcaName());
+        return new SecretKeySpec(this.secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
     }
 
     public static User getUser() {

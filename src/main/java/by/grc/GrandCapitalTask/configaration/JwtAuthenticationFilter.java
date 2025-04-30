@@ -1,6 +1,5 @@
 package by.grc.GrandCapitalTask.configaration;
 
-import by.grc.GrandCapitalTask.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
