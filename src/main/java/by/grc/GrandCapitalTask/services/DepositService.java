@@ -10,11 +10,4 @@ public class DepositService extends BaseService<Deposit, DepositRepository> {
     public DepositService(DepositRepository repo) {
         super(repo);
     }
-
-    public void startDeposit(Account account) {
-        if (!repo.existsByStatusIsTrueAndAccount_Id(account.getId())) {
-            Deposit deposit = new Deposit(null, true, account, account.getBalance(), 0.1, 2.07);
-            this.repo.save(deposit);
-        }
-    }
 }

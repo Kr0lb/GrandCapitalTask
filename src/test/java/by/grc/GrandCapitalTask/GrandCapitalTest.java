@@ -1,11 +1,8 @@
 package by.grc.GrandCapitalTask;
 
 import by.grc.GrandCapitalTask.services.UserService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -17,21 +14,12 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import javax.crypto.spec.SecretKeySpec;
-import java.util.Date;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GrandCapitalTestContainer {
-
-    @Value("${security.jwt.secret-key}")
-    private String secretKey;
-
-    @Value("${security.jwt.expiration-time}")
-    private long jwtExpiration;
+public class GrandCapitalTest {
 
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest")
@@ -66,16 +54,9 @@ public class GrandCapitalTestContainer {
 
     @Test
     void testGetAccount() throws Exception {
+        String token = mockMvc.perform(MockMvcRequestBuilders.post("/auth/login?username=jons@gmail.com&password=12345678")).andExpect(MockMvcResultMatchers.status().isOk()).andReturn().getResponse().getContentAsString();
         mockMvc.perform(MockMvcRequestBuilders.get("/user/search?page=0&size=10&name=Jons")
-                        .header("Authorization", "Bearer " + generateToken("jons@gmail.com")))
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    private String generateToken(String username) {
-        return Jwts.builder()
-                .setSubject(username)
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
-                .signWith(new SecretKeySpec(secretKey.getBytes(), "HmacSHA256"), SignatureAlgorithm.HS256)
-                .compact();
     }
 }

@@ -20,6 +20,6 @@ public class AuthenticationService {
                 )
         );
 
-        return userService.getRepo().findByEmails_Email(email).get();
+        return userService.getRepo().findByEmails_Email(email).orElseThrow();
     }
 }

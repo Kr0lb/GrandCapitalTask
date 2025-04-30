@@ -75,8 +75,6 @@ public class ControllerExceptions {
             String fieldName;
             if (error instanceof FieldError) {
                 fieldName = ((FieldError) error).getField();
-            } else if (error.getObjectName().equals("enrollDto")) {
-                fieldName = error.getObjectName();
             } else {
                 fieldName = Objects.requireNonNull(error.getArguments())[2].toString();
             }
@@ -93,7 +91,6 @@ public class ControllerExceptions {
     public ProblemDetail handleSecurityException(Exception exception) {
         ProblemDetail errorDetail = null;
 
-        // TODO send this stack trace to an observability tool
         exception.printStackTrace();
         log.error("{}: {}", exception.getClass().getName(), exception.getMessage());
 
