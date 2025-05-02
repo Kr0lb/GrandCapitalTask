@@ -25,7 +25,7 @@ public class GrandCapitalTest {
 
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15")
-            .withDatabaseName("grand_capital")
+            .withDatabaseName("grand_capital_test")
             .withUsername("postgres")
             .withPassword("root");
 
